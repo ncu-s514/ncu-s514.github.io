@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Rate changer</title>
+		<link rel="stylesheet" href="mystyle.css">
+	</head>
+	<body>
+		<div>
+			<h2>匯率轉換</h2>
+			<input type="button" onclick="question();load();" value="Start"/>
+			<br><br>
+			<button onclick="reset()">Reset</button>
+			<br><br>
+			<a href="https://rate.bot.com.tw/xrt" target="_blank">台灣銀行匯率轉換</a>
+			<p id="result"></p>
+			<table id="example"></table>
+		</div>
+		<script>
+			function question(){
+				var msg;
+				var amount =prompt("請輸入金額(台幣):", "100");
+				if(amount==null || amount==""){
+					alert('Invalid input');
+				}else{
+					msg="NT$"+amount+"=...";
+				}
+				document.getElementById("result").innerHTML=msg;
+			}
+			
+			function load() {
+				const xhttp = new XMLHttpRequest();
+				
+				xhttp.onload = function(){
+					myFunction(this);
+				}
+				xhttp.open("GET", "./rate.xml");
+				xhttp.send();
+			}
+			
+			function myFunction(xml){
+				const xmlDoc = xml.responseXML;
+				const x =xmlDoc.getElementsByTagName("RATE");
+				var amount =prompt("請輸入金額(台幣):", "100");
+				let table="<tr><th>匯率</th><th>台幣換算</th></tr>";
+				
+				for(let i = 0; i<x.length;i++){
+					table += "<tr><td>" +"USD: "+
+					x[i].getElementsByTagName("USRATE")[0].childNodes[0].nodeValue +"</td>"+
+					"<td>"+(x[i].getElementsByTagName("USRATE")[0].childNodes[0].nodeValue*amount).toFixed(2)+"</td>"+"</tr><tr><td>"+
+					"EUR: "+x[i].getElementsByTagName("EURATE")[0].childNodes[0].nodeValue +"</td>"+
+					"<td>"+(x[i].getElementsByTagName("EURATE")[0].childNodes[0].nodeValue*amount).toFixed(2)+"</td>"+"</tr><tr><td>"+
+					"JPY: "+x[i].getElementsByTagName("JPRATE")[0].childNodes[0].nodeValue +"</td>"+
+					"<td>"+(x[i].getElementsByTagName("JPRATE")[0].childNodes[0].nodeValue*amount).toFixed(2)+"</td>"+"</tr><tr><td>"+
+					"KRW: "+x[i].getElementsByTagName("KRATE")[0].childNodes[0].nodeValue +"</td>"+
+					"<td>"+(x[i].getElementsByTagName("KRATE")[0].childNodes[0].nodeValue*amount).toFixed(2)+"</td>"+"</tr><tr><td>"+
+					"AUD:"+x[i].getElementsByTagName("ARATE")[0].childNodes[0].nodeValue +"</td>"+
+					"<td>"+(x[i].getElementsByTagName("ARATE")[0].childNodes[0].nodeValue*amount).toFixed(2)+"</td>"+"</tr>";
+					}
+					document.getElementById("example").innerHTML=table;
+			}
+			
+			function reset(){
+				function question(){
+				var msg;
+				var amount =prompt("請輸入金額(台幣):", "100");
+				if(amount==null || amount==""){
+					alert('Invalid input');
+				}else{
+					msg="NT$"+amount+"=...";
+				}
+				document.getElementById("result").innerHTML=msg;
+				}
+			}	
+		</script>
+	</body>
+</html>
